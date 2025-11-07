@@ -1,0 +1,902 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; min-height: 15.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;D&amp;D Initiative Tracker&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://kit.fontawesome.com/a71c865768.js" crossorigin="anonymous"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* General Setup */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #1f2937; /* Dark background */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.container-card {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #374151; /* Medium dark card */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 1.5rem; /* Larger rounded corners for tablet */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* D20 Roller */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.d20 {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: transform 0.1s ease-out;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>user-select: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.d20:active {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: scale(0.95) rotate(5deg);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.d20-face {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: 4px solid rgba(255, 255, 255, 0.2);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Loading */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.loading-animation {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: 4px solid rgba(255, 255, 255, 0.1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-top: 4px solid #4ade80;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 32px; /* Bigger for visibility */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 32px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>animation: spin 1s linear infinite;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@keyframes spin {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>0% { transform: rotate(0deg); }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>100% { transform: rotate(360deg); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Stat Block Divider */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.stat-divider {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 5px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: linear-gradient(to right, #4b5563, #374151, #4b5563);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 0.75rem 0; /* More spacing */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Initiative List Highlights */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.current-turn-highlight {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: 3px solid #fcd34d; /* Thicker Amber border */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: scale(1.02);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 0 12px rgba(252, 211, 77, 0.6);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Input &amp; Button Adjustments for Touch */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.touch-input {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.75rem; /* Increased vertical padding */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.hp-button {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 3rem;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 3rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 2px 4px rgba(0,0,0,0.5);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.1s ease;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.hp-button:active {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: scale(0.9);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="min-h-screen p-4 sm:p-8 md:p-10 text-gray-100"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="loading-animation"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="ml-4 text-xl font-semibold text-white"&gt;Connecting to the Great Beyond...&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="max-w-7xl mx-auto space-y-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1 class="text-4xl sm:text-5xl font-extrabold text-center text-green-400 mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Dungeon Master Combat Console</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Top Section: D20 Roller and Add Character Form --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="container-card p-6 sm:p-8 mb-8 flex flex-col lg:flex-row items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- D20 Roller --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex flex-col items-center justify-center w-full lg:w-1/4 p-4 mb-6 lg:mb-0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="d20-roller" class="d20 d20-face bg-green-600 hover:bg-green-500 w-40 h-40 flex items-center justify-center text-white font-extrabold text-7xl shadow-xl transition-all duration-300 transform hover:scale-105" onclick="rollD20()"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>?</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p id="d20-result-text" class="mt-4 text-xl font-semibold text-green-300"&gt;Click to Roll&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p id="user-id-display" class="mt-2 text-sm text-gray-400 text-center"&gt;Collaboration ID: Loading...&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Add Character Form (for custom/PC entry) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="w-full lg:w-3/4 lg:pl-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold mb-4 text-white"&gt;Add PC / Custom NPC&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;form id="add-character-form" class="space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-1 sm:grid-cols-4 gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="char-name" placeholder="Character Name" required class="col-span-1 sm:col-span-2 bg-gray-700 text-white touch-input rounded-xl focus:ring-green-500 focus:border-green-500 border border-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="char-hp" placeholder="HP Max" required class="bg-gray-700 text-white touch-input rounded-xl focus:ring-green-500 focus:border-green-500 border border-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="char-ac" placeholder="AC" required class="bg-gray-700 text-white touch-input rounded-xl focus:ring-green-500 focus:border-green-500 border border-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-2 gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="char-initiative" placeholder="Initiative Score (Optional)" class="bg-gray-700 text-white touch-input rounded-xl focus:ring-green-500 focus:border-green-500 border border-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition duration-200 shadow-lg text-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fas fa-user-plus"&gt;&lt;/i&gt; Add to Initiative</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/form&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- TWO COLUMN LAYOUT: Initiative &amp; Monster Block --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid grid-cols-1 lg:grid-cols-2 gap-8"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- LEFT COLUMN: Initiative List &amp; Turn Controls --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="container-card p-4 sm:p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-center mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-bold text-white"&gt;Initiative Order&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-x-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button onclick="advanceTurn()" class="px-5 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-xl text-white font-bold transition duration-200 shadow-lg text-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fas fa-forward"&gt;&lt;/i&gt; Next Turn</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button onclick="showClearModal()" class="px-5 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-white font-bold transition duration-200 shadow-lg text-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fas fa-trash-alt"&gt;&lt;/i&gt; Clear</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Initiative List Header for large screens --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="hidden lg:grid grid-cols-12 gap-2 text-sm font-bold text-gray-400 mb-2 border-b border-gray-600 pb-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-2 text-center"&gt;INIT&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-3"&gt;NAME&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-3 text-center"&gt;HP&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-2 text-center"&gt;AC&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-2 text-center"&gt;DELETE&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="initiative-list" class="space-y-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Character rows will be dynamically inserted here --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="p-6 text-gray-400 text-center text-xl" id="empty-list-message"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>No combatants added yet. Start a fight!</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- RIGHT COLUMN: Monster Block --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="container-card p-4 sm:p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-3xl font-bold mb-4 text-red-400"&gt;Monster Stat Block Library&lt;/h2&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Monster Selector --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label for="monster-select" class="block text-lg font-medium text-gray-300 mb-2"&gt;Select Monster&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;select id="monster-select" onchange="handleMonsterSelection(this.value)" class="w-full bg-gray-700 text-white touch-input rounded-xl focus:ring-red-500 focus:border-red-500 border border-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="" disabled selected&gt;--- Choose a Monster ---&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Options populated by JS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Monster Stats Display Area --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="monster-stats-display" class="bg-gray-700 p-6 rounded-xl min-h-80 shadow-inner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-400"&gt;Monster stats will appear here after selection.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Quick Spawn Controls --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="quick-spawn-controls" class="mt-6 p-5 bg-gray-600/50 rounded-xl hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 class="text-xl font-bold mb-3 text-red-300"&gt;Quick Spawn Monster(s)&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex space-x-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="spawn-count" value="1" min="1" max="20" placeholder="Count" class="w-1/4 text-center bg-gray-700 text-white touch-input rounded-xl focus:ring-red-500 focus:border-red-500 border border-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button onclick="addSelectedMonsters()" class="w-3/4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition duration-200 shadow-lg text-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>Spawn &lt;span id="spawn-monster-name"&gt;Monster&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt; &lt;!-- END TWO COLUMN LAYOUT --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Confirmation Modal Structure (Generic) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="modal-generic" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden items-center justify-center p-4" aria-modal="true" role="dialog"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="bg-gray-700 p-8 rounded-2xl max-w-lg w-full shadow-2xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3 id="modal-title" class="text-2xl font-bold mb-4 text-red-400"&gt;&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p id="modal-message" class="text-gray-200 mb-8 text-lg"&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex justify-end space-x-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="modal-cancel" class="px-6 py-3 bg-gray-500 hover:bg-gray-600 rounded-xl text-white font-bold text-lg"&gt;Cancel&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="modal-confirm" class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-xl text-white font-bold text-lg"&gt;Confirm&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Firebase Imports and Setup --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script type="module"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- MONSTER DATA (Expanded for a beginner DM's library) ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const MONSTER_DATA = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// CR 0 - 1/8</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Bandit",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/8", size: "Medium", type: "Humanoid", ac: 12, hp: "11 (2d8 + 2)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 0, dex: 1, con: 1, int: 0, wis: 0, cha: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Scimitar:** Melee Weapon Attack: +3 to hit, 5 ft., 4 (1d6 + 1) slashing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Cultist",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/8", size: "Medium", type: "Humanoid", ac: 12, hp: "9 (2d8)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Dark Devotion:** Advantage on saves vs. charmed/frightened."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Scimitar:** Melee Weapon Attack: +3 to hit, 5 ft., 4 (1d6 + 1) slashing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Giant Rat",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/8", size: "Small", type: "Beast", ac: 12, hp: "7 (2d4 + 2)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: -2, dex: 2, con: 1, int: -4, wis: 0, cha: -3 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Keen Smell:** Advantage on Wisdom (Perception) checks that rely on smell.", "**Pack Tactics:** Advantage on an attack roll against a creature if at least one ally is within 5 ft."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Bite:** Melee Weapon Attack: +4 to hit, 5 ft., 4 (1d4 + 2) piercing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Kobold",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/8", size: "Small", type: "Humanoid (kobold)", ac: 12, hp: "5 (2d6 - 2)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: -2, dex: 2, con: -2, int: -2, wis: -1, cha: -2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Sunlight Sensitivity:** Disadvantage on attack rolls and Perception checks when in direct sunlight.", "**Pack Tactics:** Advantage on an attack roll against a creature if at least one ally is within 5 ft."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Dagger:** Melee Weapon Attack: +4 to hit, 5 ft., 4 (1d4 + 2) piercing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Stirge",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/8", size: "Tiny", type: "Beast", ac: 14, hp: "2 (1d4)", speed: "10 ft., fly 40 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: -4, dex: 2, con: -1, int: -5, wis: -3, cha: -5 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Blood Drain:** Melee Attack: +5 to hit, 5 ft. attaches to target. While attached, the stirge doesn't attack. Instead, at the start of each of the stirge's turns, the target loses 5 (1d4 + 3) HP."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// CR 1/4 - 1/2</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Goblin",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/4", size: "Small", type: "Humanoid (goblinoid)", ac: 15, hp: "7 (2d6)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: -1, dex: 2, con: 0, int: 0, wis: -1, cha: -1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Nimble Escape:** The goblin can take the Disengage or Hide action as a bonus action."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Scimitar:** Melee Weapon Attack: +4 to hit, 5 ft., 5 (1d6 + 2) slashing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Skeleton",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/4", size: "Medium", type: "Undead", ac: 13, hp: "13 (2d8 + 4)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 0, dex: 2, con: 2, int: -2, wis: -1, cha: -2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Vulnerabilities:** Bludgeoning", "**Immunities:** Poisoned, Exhaustion, Frightened"],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Shortsword:** Melee Weapon Attack: +4 to hit, 5 ft., 5 (1d6 + 2) piercing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Wolf",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/4", size: "Medium", type: "Beast", ac: 13, hp: "11 (2d8 + 2)", speed: "40 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 1, dex: 2, con: 1, int: -4, wis: 1, cha: -2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Keen Hearing and Smell:** Advantage on Perception checks.", "**Pack Tactics:** Advantage on an attack roll against a creature if at least one ally is within 5 ft."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Bite:** Melee Weapon Attack: +4 to hit, 5 ft., 7 (2d4 + 2) piercing. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Zombie",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/4", size: "Medium", type: "Undead", ac: 8, hp: "22 (3d8 + 9)", speed: "20 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 1, dex: -2, con: 3, int: -4, wis: -2, cha: -3 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Undead Fortitude:** If damage reduces the zombie to 0 HP, it makes a Con save (DC 5 + damage taken) to drop to 1 HP instead."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Slam:** Melee Weapon Attack: +3 to hit, 5 ft., 4 (1d6 + 1) bludgeoning."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Orc",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/2", size: "Medium", type: "Humanoid (orc)", ac: 13, hp: "15 (2d8 + 6)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 3, dex: 0, con: 3, int: -2, wis: -1, cha: -2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Aggressive:** Bonus action move up to speed toward a hostile creature."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Greataxe:** Melee Weapon Attack: +5 to hit, 5 ft., 9 (1d12 + 3) slashing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Flying Sword",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/4", size: "Medium", type: "Construct", ac: 17, hp: "17 (5d8 - 5)", speed: "0 ft., fly 50 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 1, dex: 3, con: -2, int: -5, wis: -4, cha: -5 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Blindsight:** 60 ft. (blind beyond this radius).", "**Immunities:** Poison, psychic damage; Charmed, Frightened, Paralyzed, Poisoned."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Attack:** Melee Weapon Attack: +5 to hit, 5 ft., 7 (1d8 + 3) slashing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// CR 1</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Bugbear",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1", size: "Medium", type: "Humanoid (goblinoid)", ac: 16, hp: "27 (5d8 + 5)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 2, dex: 2, con: 1, int: -1, wis: 0, cha: -1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Surprise Attack:** Extra 7 (2d6) damage if it surprises a creature."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Morningstar:** Melee Weapon Attack: +4 to hit, 5 ft., 11 (2d8 + 2) piercing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Ghoul",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1", size: "Medium", type: "Undead", ac: 12, hp: "22 (5d8)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 1, dex: 2, con: 0, int: -2, wis: 0, cha: -2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Immunities:** Charmed, Exhaustion, Poisoned."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Claws:** Melee Attack: +4 to hit, 5 ft., 7 (2d4 + 2) slashing. Target must succeed on a DC 10 Con save or be paralyzed for 1 min."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Gnoll",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1/2", size: "Medium", type: "Humanoid (gnoll)", ac: 15, hp: "22 (5d8)", speed: "30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 2, dex: 1, con: 0, int: -2, wis: 0, cha: -1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Rampage:** When the gnoll reduces a creature to 0 HP with a melee attack on its turn, the gnoll can take a bonus action to move up to half its speed and make a bite attack."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Bite:** Melee Weapon Attack: +4 to hit, 5 ft., 4 (1d4 + 2) piercing.", "**Spear:** Melee or Ranged Weapon Attack: +4 to hit, 5 ft. or range 20/60 ft., 5 (1d6 + 2) piercing."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: "Giant Spider",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cr: "1", size: "Large", type: "Beast", ac: 14, hp: "26 (4d10 + 4)", speed: "30 ft., climb 30 ft.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats: { str: 1, dex: 3, con: 1, int: -4, wis: 0, cha: -2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>abilities: ["**Web Sense/Walker:** Knows exactly where other creatures are in contact with its web. Ignores movement restrictions caused by webbing."],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actions: ["**Bite:** Melee Attack: +5 to hit, 5 ft., 7 (1d8 + 3) piercing damage plus 7 (2d6) poison damage. Target must succeed on a DC 11 Con save or take half poison damage."]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Global Firebase variables</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let app;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let db;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let auth;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let userId = null;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const COLLECTION_ID = 'initiative_list';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const DOCUMENT_ID = 'initiative_data';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const loadingOverlay = document.getElementById('loading-overlay');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const listContainer = document.getElementById('initiative-list');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const emptyMessage = document.getElementById('empty-list-message');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const userIdDisplay = document.getElementById('user-id-display');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const monsterSelect = document.getElementById('monster-select');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const monsterStatsDisplay = document.getElementById('monster-stats-display');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const quickSpawnControls = document.getElementById('quick-spawn-controls');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Core Application State Management ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let characters = [];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentTurnIndex = 0; // Index of the combatant currently active in the *sorted* list</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Generates a secure, random ID. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const generateId = () =&gt; crypto.randomUUID();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Constructs the Firestore document path. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const getDocRef = () =&gt; doc(db, 'artifacts', appId, 'users', userId, COLLECTION_ID, DOCUMENT_ID);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Saves the current state (characters and turn index) to Firestore. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const saveState = async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!db || !userId) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Firestore not initialized or userId missing.");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Remove objects that might be empty or invalid before saving</p>
+<p class="p1"><span class="Apple-converted-space">                </span>await setDoc(getDocRef(), {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>characters: characters.filter(c =&gt; c &amp;&amp; c.name),<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>currentTurnIndex: currentTurnIndex<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Error saving document: ", error);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Renders the entire initiative list based on the current state. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const renderList = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const sortedCharacters = characters.sort((a, b) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const initA = parseInt(a.initiative) || -99;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const initB = parseInt(b.initiative) || -99;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (initA !== initB) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>return initB - initA; // Sort by initiative descending</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Secondary sort by name ascending if initiative is the same</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return a.name.localeCompare(b.name);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>listContainer.innerHTML = sortedCharacters.map((char, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const isCurrentTurn = index === currentTurnIndex &amp;&amp; sortedCharacters.length &gt; 0;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return renderCharacterRow(char, isCurrentTurn);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}).join('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (characters.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>emptyMessage.style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>quickSpawnControls.classList.add('hidden');<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>emptyMessage.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Highlight the row if the selected monster is ready to spawn</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (selectedMonsterName) quickSpawnControls.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Converts characters data into an HTML list item. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const renderCharacterRow = (character, isCurrentTurn) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const isPlayer = character.isPlayer || false;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let cardBg = isPlayer ? 'bg-green-900/40 hover:bg-green-900/60' : 'bg-gray-800/40 hover:bg-gray-800/60';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const nameColor = isPlayer ? 'text-green-300 font-extrabold' : 'text-white font-semibold';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const hpColor = character.currentHp &lt;= 0 ? 'text-red-400 font-extrabold' : 'text-green-400 font-extrabold';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const acColor = isPlayer ? 'text-green-200' : 'text-gray-300';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const initColor = isCurrentTurn ? 'text-yellow-200' : 'text-yellow-400';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (isCurrentTurn) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardBg += ' current-turn-highlight';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>return `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="row-${character.id}" data-id="${character.id}" class="grid grid-cols-12 gap-1 lg:gap-2 p-3 ${cardBg} rounded-xl items-center transition duration-150"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Initiative (Col 1-2) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-2 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" value="${character.initiative || ''}" placeholder="Roll" data-field="initiative"</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>class="w-full text-center bg-gray-900/70 ${initColor} font-extrabold p-2 rounded-lg text-lg touch-input border border-transparent"</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>onchange="updateField('${character.id}', 'initiative', this.value)" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Name (Col 3-4 on mobile, 3-5 on tablet/desktop) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-3 truncate pl-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="${nameColor} text-lg"&gt;${character.name}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>${isPlayer ? '&lt;p class="text-xs text-green-500/70"&gt;PC&lt;/p&gt;' : ''}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- HP (Col 6-8) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-3 flex items-center space-x-1 sm:space-x-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button onclick="changeHP('${character.id}', -1)" class="hp-button bg-red-600 hover:bg-red-700 rounded-full text-white text-md flex items-center justify-center"&gt;-&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" value="${character.currentHp}" data-field="currentHp"</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>class="w-full text-center bg-gray-900/70 ${hpColor} p-1 rounded-lg text-xl touch-input border border-transparent"</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>onchange="updateField('${character.id}', 'currentHp', this.value)" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button onclick="changeHP('${character.id}', 1)" class="hp-button bg-green-600 hover:bg-green-700 rounded-full text-white text-md flex items-center justify-center"&gt;+&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- AC (Col 9-10) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-2 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" value="${character.ac}" placeholder="AC" data-field="ac"</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>class="w-full text-center bg-gray-900/70 ${acColor} p-2 rounded-lg text-lg touch-input border border-transparent"</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>onchange="updateField('${character.id}', 'ac', this.value)" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Delete (Col 11-12) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-2 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button onclick="showDeleteModal('${character.id}', '${character.name}')" class="text-red-400 hover:text-red-500 p-2 rounded-full transition duration-150 text-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fas fa-trash-alt"&gt;&lt;/i&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Dice/HP Rolling Utilities ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Simple D-side die roll. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const rollDie = (sides) =&gt; Math.floor(Math.random() * sides) + 1;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/**</p>
+<p class="p1"><span class="Apple-converted-space">         </span>* Parses and rolls HP from a string like "2d8 + 2" or "30".</p>
+<p class="p1"><span class="Apple-converted-space">         </span>*/</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const parseAndRollHP = (hpString) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const simpleMatch = hpString.match(/^\s*(\d+)\s*$/);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (simpleMatch) return parseInt(simpleMatch[1]);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const diceMatch = hpString.match(/(\d+)d(\d+)\s*([+\-]\s*\d+)?/);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (diceMatch) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const numDice = parseInt(diceMatch[1]);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const sides = parseInt(diceMatch[2]);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Ensure modifier is parsed correctly (e.g., handles " + 2" or " - 1")</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const modifierStr = diceMatch[3] ? diceMatch[3].replace(/\s/g, '') : '0';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const modifier = parseInt(modifierStr);</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>let totalHp = modifier;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>for (let i = 0; i &lt; numDice; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>totalHp += rollDie(sides);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return Math.max(1, totalHp); // Minimum 1 HP</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const fallbackMatch = hpString.match(/\d+/);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (fallbackMatch) return parseInt(fallbackMatch[0]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>return 1;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Character Manipulation ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/**</p>
+<p class="p1"><span class="Apple-converted-space">         </span>* Adds a new character to the local array and saves to Firestore.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>*/</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const addCharacter = (name, hp, ac, initiative, isPlayer = false) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const newChar = {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>id: generateId(),</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: name.trim(),</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentHp: parseInt(hp) || 0,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>ac: parseInt(ac) || 0,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Null for empty initiative allows for sorting to place them last if not yet rolled</p>
+<p class="p1"><span class="Apple-converted-space">                </span>initiative: initiative === '' ? null : (parseInt(initiative) || null),</p>
+<p class="p1"><span class="Apple-converted-space">                </span>isPlayer: isPlayer</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>characters = [...characters, newChar];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>saveState();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Adds one or more monsters based on the currently selected stat block. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addSelectedMonsters = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const monsterName = monsterSelect.value;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const count = parseInt(document.getElementById('spawn-count').value) || 1;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const monster = MONSTER_DATA.find(m =&gt; m.name === monsterName);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!monster) return;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Find the highest existing number for this monster type</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const existingMonsters = characters.filter(c =&gt; c.name.startsWith(monsterName)).length;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let monsterIndex = 0;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Start naming from the highest existing number + 1</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (existingMonsters &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>const nameParts = characters</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>.filter(c =&gt; c.name.startsWith(monsterName) &amp;&amp; !isNaN(parseInt(c.name.split(' ').pop())))</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>.map(c =&gt; parseInt(c.name.split(' ').pop()))</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>.filter(n =&gt; !isNaN(n));</p>
+<p class="p2"><span class="Apple-converted-space">                 </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>monsterIndex = nameParts.length &gt; 0 ? Math.max(...nameParts) : 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Extract HP formula (e.g., "2d8 + 2") from the full HP string</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const hpMatch = monster.hp.match(/\((.*?)\)/);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const hpFormula = hpMatch ? hpMatch[1].trim() : monster.hp;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Get DEX modifier. Stats are stored as integers (e.g., 1, 2, 3...)</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const dexMod = monster.stats.dex;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>for (let i = 0; i &lt; count; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>monsterIndex++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const name = `${monsterName} ${monsterIndex}`;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Roll HP based on the formula</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const hp = parseAndRollHP(hpFormula);<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Roll Initiative (d20 + DEX modifier)</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const initiative = rollDie(20) + (dexMod || 0);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const newMonster = {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>id: generateId(),</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>name: name,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>currentHp: hp,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>ac: monster.ac,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>initiative: initiative,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>isPlayer: false // NPCs/Monsters</p>
+<p class="p1"><span class="Apple-converted-space">                </span>};</p>
+<p class="p1"><span class="Apple-converted-space">                </span>characters.push(newMonster);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>saveState();</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Reset spawn count to 1 after successful spawning</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('spawn-count').value = 1;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Deletes a character by ID. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.deleteCharacter = (id) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>characters = characters.filter(char =&gt; char.id !== id);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Recalculate turn index</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (currentTurnIndex &gt;= characters.length) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentTurnIndex = Math.max(0, characters.length - 1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>saveState();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Updates a specific field (HP, AC, Initiative) of a character. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.updateField = (id, field, value) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const index = characters.findIndex(char =&gt; char.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (index !== -1) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>let parsedValue = ['initiative', 'currentHp', 'ac'].includes(field) ? (parseInt(value) || 0) : value;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (field === 'initiative' &amp;&amp; (value === '' || value === null)) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>parsedValue = null;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>characters[index][field] = parsedValue;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>renderList();<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>saveState();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Changes HP by a specific amount (+/-). */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.changeHP = (id, amount) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const char = characters.find(c =&gt; c.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (char) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const newHp = (char.currentHp || 0) + amount;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>window.updateField(id, 'currentHp', newHp);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Turn Tracking Logic ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.advanceTurn = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (characters.length === 0) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Get the list sorted the same way as renderList()</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const sortedCharacters = characters.sort((a, b) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const initA = parseInt(a.initiative) || -99;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const initB = parseInt(b.initiative) || -99;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (initA !== initB) return initB - initA;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return a.name.localeCompare(b.name);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// If the current list is empty, reset</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (sortedCharacters.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>currentTurnIndex = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>// Advance the index, wrapping around to the start</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>currentTurnIndex = (currentTurnIndex + 1) % sortedCharacters.length;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>saveState();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.clearEncounter = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>characters = [];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentTurnIndex = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderList();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>saveState();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hideModal();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- D20 Roller Logic ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const d20Roller = document.getElementById('d20-roller');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const d20ResultText = document.getElementById('d20-result-text');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.rollD20 = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const result = rollDie(20);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>d20Roller.textContent = result;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Apply color based on result</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let bgColor = 'bg-green-600';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let textColor = 'text-white';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (result === 20) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>bgColor = 'bg-yellow-400';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>textColor = 'text-gray-900';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else if (result === 1) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>bgColor = 'bg-red-600';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>d20Roller.className = `d20 d20-face ${bgColor} hover:${bgColor.replace('bg-', 'bg-')} w-40 h-40 flex items-center justify-center ${textColor} font-extrabold text-7xl shadow-xl transition-all duration-300 transform hover:scale-105`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>d20ResultText.textContent = `Last Roll: ${result}`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Monster Stat Block Logic ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Populates the monster selection dropdown. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const populateMonsterSelector = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const sortedMonsters = MONSTER_DATA.sort((a, b) =&gt; a.name.localeCompare(b.name));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>sortedMonsters.forEach(monster =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const option = document.createElement('option');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>option.value = monster.name;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>option.textContent = `${monster.name} (CR ${monster.cr})`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>monsterSelect.appendChild(option);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let selectedMonsterName = null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/** Formats and displays the selected monster's stat block. */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.handleMonsterSelection = (monsterName) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const monster = MONSTER_DATA.find(m =&gt; m.name === monsterName);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>selectedMonsterName = monsterName;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!monster) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>monsterStatsDisplay.innerHTML = '&lt;p class="text-gray-400"&gt;Monster not found.&lt;/p&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>quickSpawnControls.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Function to format the modifier</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const formatMod = (score) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const mod = Math.floor((score - 10) / 2);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return mod &gt;= 0 ? `+${mod}` : `${mod}`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Stat Block HTML generation</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const stats = monster.stats;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const statBlockHtml = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-white"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-3xl font-extrabold text-red-300 mb-1"&gt;${monster.name}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-base italic mb-3"&gt;${monster.size} ${monster.type}, Challenge ${monster.cr}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-lg space-y-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;span class="font-bold text-red-200"&gt;AC:&lt;/span&gt; ${monster.ac}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;span class="font-bold text-red-200"&gt;HP:&lt;/span&gt; ${monster.hp}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;span class="font-bold text-red-200"&gt;Speed:&lt;/span&gt; ${monster.speed}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Stats Grid --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-6 gap-2 text-center text-lg font-bold mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-800/70 p-2 rounded-lg"&gt;STR&lt;br/&gt;&lt;span class="text-red-300"&gt;${formatMod(stats.str + 10)}&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-800/70 p-2 rounded-lg"&gt;DEX&lt;br/&gt;&lt;span class="text-red-300"&gt;${formatMod(stats.dex + 10)}&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-800/70 p-2 rounded-lg"&gt;CON&lt;br/&gt;&lt;span class="text-red-300"&gt;${formatMod(stats.con + 10)}&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-800/70 p-2 rounded-lg"&gt;INT&lt;br/&gt;&lt;span class="text-red-300"&gt;${formatMod(stats.int + 10)}&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-800/70 p-2 rounded-lg"&gt;WIS&lt;br/&gt;&lt;span class="text-red-300"&gt;${formatMod(stats.wis + 10)}&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-800/70 p-2 rounded-lg"&gt;CHA&lt;br/&gt;&lt;span class="text-red-300"&gt;${formatMod(stats.cha + 10)}&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Abilities --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>${(monster.abilities || []).length &gt; 0 ? `</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4 class="text-xl font-bold mt-4 mb-2 text-red-300"&gt;Traits&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>${monster.abilities.map(ability =&gt; `&lt;p class="text-base mb-2"&gt;${ability}&lt;/p&gt;`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>` : ''}</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Actions --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>${(monster.actions || []).length &gt; 0 ? `</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4 class="text-xl font-bold mt-4 mb-2 text-red-300"&gt;Actions&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>${monster.actions.map(action =&gt; `&lt;p class="text-base mb-2"&gt;${action}&lt;/p&gt;`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>` : ''}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>monsterStatsDisplay.innerHTML = statBlockHtml;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('spawn-monster-name').textContent = monster.name;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>quickSpawnControls.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Modal/UI Management ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const modalGeneric = document.getElementById('modal-generic');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const modalTitle = document.getElementById('modal-title');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const modalMessage = document.getElementById('modal-message');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const modalConfirm = document.getElementById('modal-confirm');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const modalCancel = document.getElementById('modal-cancel');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const hideModal = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalGeneric.classList.remove('flex');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalGeneric.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalConfirm.onclick = null; // Clear handler</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.showDeleteModal = (id, name) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalTitle.textContent = "Confirm Deletion";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalMessage.innerHTML = `Are you sure you want to remove &lt;span class="font-semibold text-white"&gt;${name}&lt;/span&gt; from the encounter?`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalConfirm.textContent = "Delete";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalGeneric.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalGeneric.classList.add('flex');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalConfirm.onclick = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>window.deleteCharacter(id);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>hideModal();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalCancel.onclick = hideModal;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.showClearModal = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (characters.length === 0) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalTitle.textContent = "Clear Encounter";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalMessage.innerHTML = `Are you sure you want to remove **ALL** ${characters.length} combatants and reset the encounter? This cannot be undone.`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalConfirm.textContent = "Clear All";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalGeneric.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalGeneric.classList.add('flex');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalConfirm.onclick = window.clearEncounter;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>modalCancel.onclick = hideModal;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Form Submission ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('add-character-form').addEventListener('submit', function(e) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>e.preventDefault();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const name = document.getElementById('char-name').value;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const hp = document.getElementById('char-hp').value;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ac = document.getElementById('char-ac').value;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const initiative = document.getElementById('char-initiative').value;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (name &amp;&amp; hp &amp;&amp; ac) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>addCharacter(name, hp, ac, initiative, true);<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Clear the form fields</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('char-name').value = '';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('char-hp').value = '';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('char-ac').value = '';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('char-initiative').value = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Firebase Initialization and Real-time Listener ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const initFirebase = async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!firebaseConfig) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Firebase config is missing.");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>loadingOverlay.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// 1. Initialize App and Services</p>
+<p class="p1"><span class="Apple-converted-space">                </span>app = initializeApp(firebaseConfig);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>db = getFirestore(app);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>auth = getAuth(app);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// 2. Authenticate the User</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (initialAuthToken) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>await signInWithCustomToken(auth, initialAuthToken);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>await signInAnonymously(auth);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// 3. Set up Auth State Listener</p>
+<p class="p1"><span class="Apple-converted-space">                </span>onAuthStateChanged(auth, (user) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (user) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userId = user.uid;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userIdDisplay.textContent = `Collaboration ID: ${userId.substring(0, 8)}... (Share for co-DMing)`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>// 4. Start Real-time Data Listener</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>const docRef = getDocRef();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>onSnapshot(docRef, (docSnap) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>if (docSnap.exists()) {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>const data = docSnap.data();</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>characters = data.characters || [];</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>currentTurnIndex = data.currentTurnIndex || 0;</p>
+<p class="p2"><span class="Apple-converted-space">                                </span></p>
+<p class="p1"><span class="Apple-converted-space">                                </span>// Ensure turn index is within bounds after data load</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>if (currentTurnIndex &gt;= characters.length &amp;&amp; characters.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>currentTurnIndex = 0;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>} else if (characters.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>currentTurnIndex = 0;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>// Document doesn't exist, create it with initial state</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>if (characters.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>setDoc(docRef, { characters: [], currentTurnIndex: 0 }, { merge: true }).catch(e =&gt; console.error("Error creating initial document:", e));</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>renderList();</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>loadingOverlay.classList.add('hidden');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}, (error) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>console.error("Error listening to Firestore changes:", error);</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>loadingOverlay.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userId = null;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>loadingOverlay.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Critical error during Firebase setup:", error);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>loadingOverlay.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Initialize on window load</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.onload = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>populateMonsterSelector();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>initFirebase();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
